@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="font_title">18sp</dimen>
+    <dimen name="font_subtitle">13sp</dimen>
+
+    <dimen name="bottom_sheet_padding">16dp</dimen>
+
+</resources>
