@@ -3,6 +3,7 @@ package org.squiril.hilcoe.schedule;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +74,7 @@ public class NetworkManager {
             } catch (FileNotFoundException e){
                 fis = null;
             }
-            if (fis == null) {
+            if (fis == null && !prefs.getBoolean("recentlyUpdated", false)) {
                 String jsonString = getUrlString(url);
                 Log.i(TAG, "Received JSON: " + jsonString);
 
@@ -85,6 +86,7 @@ public class NetworkManager {
                 fos.write(Objects.requireNonNull(jsonString).getBytes());
                 fos.close();
                 Log.i(TAG, "File saved (probably)");
+                Toast.makeText(context, "Schedule Updated", Toast.LENGTH_SHORT).show();
                 return 0;
             } else {
                 return 0;

@@ -318,7 +318,7 @@ public class MainFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params){
 
-            sentinel = new NetworkManager(getActivity()).saveScheduleFile();
+            sentinel = new NetworkManager(Objects.requireNonNull(getActivity())).saveScheduleFile();
 
             return null;
         }
@@ -334,6 +334,7 @@ public class MainFragment extends Fragment {
                     }
                     break;
                 case 1:
+                    //TODO: There have been reported 4 crashes here. Surround them by try catches tomorrow.
                     Toast.makeText(getActivity(), "Failed to download", Toast.LENGTH_SHORT).show();
                     break;
                 case 2:
@@ -362,6 +363,7 @@ public class MainFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.fragment_main_menu_refresh:
 
+                prefs.edit().putBoolean("recentlyUpdated", false).apply();
                 new FetchItemsTask().execute();
                 Toast.makeText(getActivity(), "Updating schedule", Toast.LENGTH_SHORT).show();
 
