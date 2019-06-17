@@ -2,14 +2,15 @@ package org.squiril.hilcoe.schedule.fragments;
 
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,9 +32,6 @@ import java.util.Objects;
 
 import static org.squiril.hilcoe.schedule.Constants.PREF_NAME;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MainFragment extends Fragment {
 
     TextView ScheduleType;
@@ -88,9 +86,12 @@ public class MainFragment extends Fragment {
     TextView FourthFridayRoom;
     TextView FourthSaturdayRoom;
 
+    //TODO: I don't like this here but I do it for the SnackBars
+    private View view;
+
     private JSONParser parser;
     private SharedPreferences prefs;
-    private AutofillManager afm;
+    private AutofillManager afm; //TODO: This hasn't been working. Find other methods.
     private int currentOrientation; //TODO: I really don't like global vars. Change this.
 
     public MainFragment() {
@@ -106,13 +107,16 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        this.view = view;
 
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         parser = new JSONParser(getActivity());
+
+        initViews(view);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             afm = getActivity().getSystemService(AutofillManager.class);
@@ -121,6 +125,101 @@ public class MainFragment extends Fragment {
         Objects.requireNonNull(((MainActivity) getActivity()).getSupportActionBar())
                 .setTitle(prefs.getString("bid", ""));
 
+
+
+        if(!checkIfUpdated()){
+            new FetchItemsTask().execute();
+        }else {
+            currentOrientation = getResources().getConfiguration().orientation;
+            setupMain();
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if (checkIfUpdated())
+            setupMain();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
+        private int sentinel;
+
+        @Override
+        protected Void doInBackground(Void... params){
+
+            sentinel = new NetworkManager(Objects.requireNonNull(getActivity())).saveScheduleFile();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void item){
+            switch (sentinel){
+                case 0:
+                    setupMain();
+                    prefs.edit().putBoolean("recentlyUpdated", true).apply();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        afm.commit();
+                    }
+                    SimpleSnackBar("Schedule Updated");
+                    break;
+                case 1:
+                    //TODO: There have been reported 4 crashes here. Surround them by try catches tomorrow.
+                    SimpleSnackBar("Failed to download");
+                    break;
+                case 2:
+                    if (getActivity() != null)
+                        Toast.makeText(
+                                getActivity(), "Invalid Batch ID.", Toast.LENGTH_LONG).show();
+                    prefs.edit().putString("bid", "").apply();
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new LoginFragment())
+                            .commit();
+                    break;
+                default:
+                    if (getActivity() != null)
+                        SimpleSnackBar("No Internet Access. Try again later.");
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.fragment_main_menu_refresh:
+
+                prefs.edit().putBoolean("recentlyUpdated", false).apply();
+                new FetchItemsTask().execute();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), "Updating schedule", Toast.LENGTH_SHORT).show();
+
+                return true;
+            case R.id.fragment_main_menu_change:
+
+                prefs.edit().putString("bid", "").putBoolean("recentlyUpdated", false).apply();
+                assert getFragmentManager() != null;
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void initViews(View view){
         ScheduleType = view.findViewById(R.id.fragment_main_schedule_type);
 
         FirstMondayRoom = view.findViewById(R.id.fragment_summary_first_monday_room);
@@ -171,19 +270,7 @@ public class MainFragment extends Fragment {
         FourthFridayRoom = view.findViewById(R.id.fragment_summary_fourth_friday_room);
         FourthSaturdayTitle = view.findViewById(R.id.fragment_summary_fourth_saturday_title);
         FourthSaturdayRoom = view.findViewById(R.id.fragment_summary_fourth_saturday_room);
-
-        if(!checkIfUpdated()){
-            new FetchItemsTask().execute();
-        }else {
-            currentOrientation = getResources().getConfiguration().orientation;
-            setupMain();
-        }
-
-
-
-        return view;
     }
-
     private void setupMain(){
         //TODO: The data it passes it now is completely useless and is just a preparation for adding multiple schedules.
         Schedule schedule = parser.getSchedule(parser.getScheduleObject(prefs.getString("bid", "") + ".json"));
@@ -287,7 +374,19 @@ public class MainFragment extends Fragment {
         FourthSaturdayTitle.setText(checkForOrientation(schedule.getSaturdayFourthTitle()));
         FourthSaturdayRoom.setText(schedule.getSaturdayFourthRoom());
     }
-
+    private void SimpleSnackBar(String text){
+        CoordinatorLayout cl = view.findViewById(R.id.fragment_main_coordinator_layout);
+        final Snackbar snackbar = Snackbar.make(cl, text, Snackbar.LENGTH_LONG);
+        snackbar.setAction("Ok", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        }).show();
+    }
+    private boolean checkIfUpdated(){
+        return prefs.getBoolean("recentlyUpdated", false);
+    }
     private String checkForOrientation(String text){
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
             if (!text.equals("") && text.contains("("))
@@ -299,84 +398,4 @@ public class MainFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        if (checkIfUpdated())
-            setupMain();
-    }
-
-    private boolean checkIfUpdated(){
-        return prefs.getBoolean("recentlyUpdated", false);
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
-        private int sentinel;
-
-        @Override
-        protected Void doInBackground(Void... params){
-
-            sentinel = new NetworkManager(Objects.requireNonNull(getActivity())).saveScheduleFile();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void item){
-            switch (sentinel){
-                case 0:
-                    setupMain();
-                    prefs.edit().putBoolean("recentlyUpdated", true).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        afm.commit();
-                    }
-                    break;
-                case 1:
-                    //TODO: There have been reported 4 crashes here. Surround them by try catches tomorrow.
-                    Toast.makeText(getActivity(), "Failed to download", Toast.LENGTH_SHORT).show();
-                    break;
-                case 2:
-                    Toast.makeText(getActivity(), "Invalid Batch ID.", Toast.LENGTH_LONG).show();
-                    prefs.edit().putString("bid", "").apply();
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new LoginFragment())
-                            .commit();
-                    break;
-                default:
-                    Toast.makeText(getActivity(), "No Internet access. Fix that and refresh.", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.fragment_main_menu_refresh:
-
-                prefs.edit().putBoolean("recentlyUpdated", false).apply();
-                new FetchItemsTask().execute();
-                Toast.makeText(getActivity(), "Updating schedule", Toast.LENGTH_SHORT).show();
-
-                return true;
-            case R.id.fragment_main_menu_change:
-
-                prefs.edit().putString("bid", "").putBoolean("recentlyUpdated", false).apply();
-                assert getFragmentManager() != null;
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

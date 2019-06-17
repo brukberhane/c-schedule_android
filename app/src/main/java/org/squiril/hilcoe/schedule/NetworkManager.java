@@ -3,19 +3,15 @@ package org.squiril.hilcoe.schedule;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
@@ -74,7 +70,7 @@ public class NetworkManager {
             } catch (FileNotFoundException e){
                 fis = null;
             }
-            if (fis == null && !prefs.getBoolean("recentlyUpdated", false)) {
+            if (fis == null || !prefs.getBoolean("recentlyUpdated", false)) {
                 String jsonString = getUrlString(url);
                 Log.i(TAG, "Received JSON: " + jsonString);
 
@@ -86,7 +82,6 @@ public class NetworkManager {
                 fos.write(Objects.requireNonNull(jsonString).getBytes());
                 fos.close();
                 Log.i(TAG, "File saved (probably)");
-                Toast.makeText(context, "Schedule Updated", Toast.LENGTH_SHORT).show();
                 return 0;
             } else {
                 return 0;
