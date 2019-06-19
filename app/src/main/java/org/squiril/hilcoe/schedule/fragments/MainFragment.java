@@ -30,8 +30,11 @@ import org.squiril.hilcoe.schedule.R;
 import org.squiril.hilcoe.schedule.activities.MainActivity;
 import org.squiril.hilcoe.schedule.models.Schedule;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
 import static org.squiril.hilcoe.schedule.Constants.PREF_NAME;
 
 public class MainFragment extends Fragment {
@@ -118,7 +121,7 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         this.view = view;
 
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         parser = new JSONParser(getActivity());
 
         initViews(view);
@@ -400,7 +403,13 @@ public class MainFragment extends Fragment {
         }).show();
     }
     private boolean checkIfUpdated(){
-        return prefs.getBoolean("recentlyUpdated", false);
+        FileInputStream fis;
+        try {
+            fis = Objects.requireNonNull(getActivity()).openFileInput(prefs.getString("bid", ""));
+        } catch (FileNotFoundException e){
+            fis = null;
+        }
+        return prefs.getBoolean("recentlyUpdated", false) && fis != null;
     }
     private String checkForOrientation(String text){
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
