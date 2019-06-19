@@ -50,7 +50,7 @@ public class LoginFragment extends Fragment {
                 Snackbar.make(coordinatorLayout, "No AutoFill", Snackbar.LENGTH_LONG);
         }
 
-        prefs.edit().putBoolean("recentlyUpdated", false).apply();
+//        TODO: check if this works : prefs.edit().putBoolean("recentlyUpdated", false).apply();
 
         FloatingActionButton fab = view.findViewById(R.id.login_activity_enter_fab);
         fab.setOnClickListener(new View.OnClickListener() {

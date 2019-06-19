@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.autofill.AutofillManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +88,9 @@ public class MainFragment extends Fragment {
     TextView FourthFridayRoom;
     TextView FourthSaturdayRoom;
 
+    NestedScrollView nestedScrollView;
+    LinearLayout loadingLayout;
+
     //TODO: I don't like this here but I do it for the SnackBars
     private View view;
 
@@ -117,6 +122,7 @@ public class MainFragment extends Fragment {
         parser = new JSONParser(getActivity());
 
         initViews(view);
+        changeVisibility(0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             afm = getActivity().getSystemService(AutofillManager.class);
@@ -129,6 +135,7 @@ public class MainFragment extends Fragment {
 
         if(!checkIfUpdated()){
             new FetchItemsTask().execute();
+            changeVisibility(0);
         }else {
             currentOrientation = getResources().getConfiguration().orientation;
             setupMain();
@@ -169,8 +176,8 @@ public class MainFragment extends Fragment {
                     SimpleSnackBar("Schedule Updated");
                     break;
                 case 1:
-                    //TODO: There have been reported 4 crashes here. Surround them by try catches tomorrow.
                     SimpleSnackBar("Failed to download");
+                    changeVisibility(1);
                     break;
                 case 2:
                     if (getActivity() != null)
@@ -180,10 +187,12 @@ public class MainFragment extends Fragment {
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new LoginFragment())
                             .commit();
+                    changeVisibility(1);
                     break;
                 default:
                     if (getActivity() != null)
                         SimpleSnackBar("No Internet Access. Try again later.");
+                    changeVisibility(1);
             }
         }
 
@@ -203,13 +212,14 @@ public class MainFragment extends Fragment {
 
                 prefs.edit().putBoolean("recentlyUpdated", false).apply();
                 new FetchItemsTask().execute();
+                changeVisibility(0);
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), "Updating schedule", Toast.LENGTH_SHORT).show();
 
                 return true;
             case R.id.fragment_main_menu_change:
 
-                prefs.edit().putString("bid", "").putBoolean("recentlyUpdated", false).apply();
+                prefs.edit().putString("bid", "")/*.putBoolean("recentlyUpdated", false)*/.apply();
                 assert getFragmentManager() != null;
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
 
@@ -270,6 +280,9 @@ public class MainFragment extends Fragment {
         FourthFridayRoom = view.findViewById(R.id.fragment_summary_fourth_friday_room);
         FourthSaturdayTitle = view.findViewById(R.id.fragment_summary_fourth_saturday_title);
         FourthSaturdayRoom = view.findViewById(R.id.fragment_summary_fourth_saturday_room);
+
+        nestedScrollView = view.findViewById(R.id.fragment_main_loaded_view);
+        loadingLayout = view.findViewById(R.id.fragment_main_loading_view);
     }
     private void setupMain(){
         //TODO: The data it passes it now is completely useless and is just a preparation for adding multiple schedules.
@@ -373,6 +386,8 @@ public class MainFragment extends Fragment {
 
         FourthSaturdayTitle.setText(checkForOrientation(schedule.getSaturdayFourthTitle()));
         FourthSaturdayRoom.setText(schedule.getSaturdayFourthRoom());
+
+        changeVisibility(1);
     }
     private void SimpleSnackBar(String text){
         CoordinatorLayout cl = view.findViewById(R.id.fragment_main_coordinator_layout);
@@ -397,5 +412,13 @@ public class MainFragment extends Fragment {
             return text;
         }
     }
-
+    private void changeVisibility(int visibility){
+        if (visibility == 1) {
+            loadingLayout.setVisibility(LinearLayout.GONE);
+            nestedScrollView.setVisibility(NestedScrollView.VISIBLE);
+        } else {
+            loadingLayout.setVisibility(LinearLayout.VISIBLE);
+            nestedScrollView.setVisibility(NestedScrollView.GONE);
+        }
+    }
 }

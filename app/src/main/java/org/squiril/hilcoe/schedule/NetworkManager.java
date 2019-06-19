@@ -71,6 +71,8 @@ public class NetworkManager {
                 fis = null;
             }
             if (fis == null || !prefs.getBoolean("recentlyUpdated", false)) {
+                if (fis != null && prefs.getBoolean("recentlyUpdated", false))
+                    return 0;
                 String jsonString = getUrlString(url);
                 Log.i(TAG, "Received JSON: " + jsonString);
 

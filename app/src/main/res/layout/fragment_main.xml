@@ -7,8 +7,28 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MainFragment">
 
+
+    <LinearLayout
+        android:id="@+id/fragment_main_loading_view"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Downloading Schedule..." />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:id="@+id/fragment_main_loaded_view"
         android:layout_height="wrap_content">
 
         <TableLayout

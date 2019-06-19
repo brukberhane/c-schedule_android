@@ -6,8 +6,8 @@ android {
         applicationId "org.squiril.hilcoe.schedule"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8
-        versionName "0.3.2"
+        versionCode 10
+        versionName "0.3.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
