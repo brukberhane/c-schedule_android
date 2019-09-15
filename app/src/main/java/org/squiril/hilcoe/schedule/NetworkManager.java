@@ -63,7 +63,7 @@ public class NetworkManager {
         String bID = prefs.getString("bid", "");
 
         try{
-            String url = "https://c-sched-fmpgykdxte.now.sh/schedule/get/" + bID;
+            String url = "https://class-schedule.herokuapp.com/schedule/get/" + bID;
             FileInputStream fis;
             try {
                 fis = context.openFileInput(bID + ".json");
