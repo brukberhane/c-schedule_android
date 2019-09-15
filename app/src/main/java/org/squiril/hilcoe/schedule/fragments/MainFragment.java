@@ -301,94 +301,115 @@ public class MainFragment extends Fragment {
         ScheduleType.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
 
         //Monday's schedule
+        FirstMondayTitle.setText(checkForOrientation(schedule.getMonday().getPeriodOne()
+                .getCourseTitle()));
+        FirstMondayRoom.setText(schedule.getMonday().getPeriodOne().getClassRoom());
 
+        SecondMondayTitle.setText(checkForOrientation(schedule.getMonday().getPeriodTwo()
+                .getCourseTitle()));
+        SecondMondayRoom.setText(schedule.getMonday().getPeriodTwo().getClassRoom());
 
-        FirstMondayTitle.setText(checkForOrientation(schedule.getMondayFirstTitle()));
-        FirstMondayRoom.setText(schedule.getMondayFirstRoom());
+        ThirdMondayTitle.setText(checkForOrientation(schedule.getMonday().getPeriodThree()
+                .getCourseTitle()));
+        ThirdMondayRoom.setText(schedule.getMonday().getPeriodThree().getClassRoom());
 
-        SecondMondayTitle.setText(checkForOrientation(schedule.getMondaySecondTitle()));
-        SecondMondayRoom.setText(schedule.getMondaySecondRoom());
-
-
-        ThirdMondayTitle.setText(checkForOrientation(schedule.getMondayThirdTitle()));
-        ThirdMondayRoom.setText(schedule.getMondayThirdRoom());
-
-        FourthMondayTitle.setText(checkForOrientation(schedule.getMondayFourthTitle()));
-        FourthMondayRoom.setText(schedule.getMondayFourthRoom());
+        FourthMondayTitle.setText(checkForOrientation(schedule.getMonday().getPeriodFour()
+                .getCourseTitle()));
+        FourthMondayRoom.setText(schedule.getMonday().getPeriodFour().getClassRoom());
 
 
         //Tuesday's schedule
-        FirstTuesdayTitle.setText(checkForOrientation(schedule.getTuesdayFirstTitle()));
-        FirstTuesdayRoom.setText(schedule.getTuesdayFirstRoom());
+        FirstTuesdayTitle.setText(checkForOrientation(schedule.getTuesday().getPeriodOne()
+                .getCourseTitle()));
+        FirstTuesdayRoom.setText(schedule.getTuesday().getPeriodOne().getClassRoom());
 
-        SecondTuesdayTitle.setText(checkForOrientation(schedule.getTuesdaySecondTitle()));
-        SecondTuesdayRoom.setText(schedule.getTuesdaySecondRoom());
+        SecondTuesdayTitle.setText(checkForOrientation(schedule.getTuesday().getPeriodTwo()
+                .getCourseTitle()));
+        SecondTuesdayRoom.setText(schedule.getTuesday().getPeriodTwo().getClassRoom());
 
-        ThirdTuesdayTitle.setText(checkForOrientation(schedule.getTuesdayThirdTitle()));
-        ThirdTuesdayRoom.setText(schedule.getTuesdayThirdRoom());
+        ThirdTuesdayTitle.setText(checkForOrientation(schedule.getTuesday().getPeriodThree()
+                .getCourseTitle()));
+        ThirdTuesdayRoom.setText(schedule.getTuesday().getPeriodThree().getClassRoom());
 
-        FourthTuesdayTitle.setText(checkForOrientation(schedule.getTuesdayFourthTitle()));
-        FourthTuesdayRoom.setText(schedule.getTuesdayFourthRoom());
+        FourthTuesdayTitle.setText(checkForOrientation(schedule.getTuesday().getPeriodFour()
+                .getCourseTitle()));
+        FourthTuesdayRoom.setText(schedule.getTuesday().getPeriodFour().getClassRoom());
 
 
         //Wednesday's schedule
 
-        FirstWednesdayTitle.setText(checkForOrientation(schedule.getWednesdayFirstTitle()));
-        FirstWednesdayRoom.setText(schedule.getWednesdayFirstRoom());
+        FirstWednesdayTitle.setText(checkForOrientation(schedule.getWednesday().getPeriodOne()
+                .getCourseTitle()));
+        FirstWednesdayRoom.setText(schedule.getWednesday().getPeriodOne().getClassRoom());
 
-        SecondWednesdayTitle.setText(checkForOrientation(schedule.getWednesdaySecondTitle()));
-        SecondWednesdayRoom.setText(schedule.getWednesdaySecondRoom());
+        SecondWednesdayTitle.setText(checkForOrientation(schedule.getWednesday().getPeriodTwo()
+                .getCourseTitle()));
+        SecondWednesdayRoom.setText(schedule.getWednesday().getPeriodTwo().getClassRoom());
 
-        ThirdWednesdayTitle.setText(checkForOrientation(schedule.getWednesdayThirdTitle()));
-        ThirdWednesdayRoom.setText(schedule.getWednesdayThirdRoom());
+        ThirdWednesdayTitle.setText(checkForOrientation(schedule.getWednesday().getPeriodThree()
+                .getCourseTitle()));
+        ThirdWednesdayRoom.setText(schedule.getWednesday().getPeriodThree().getClassRoom());
 
-        FourthWednesdayTitle.setText(checkForOrientation(schedule.getWednesdayFourthTitle()));
-        FourthWednesdayRoom.setText(schedule.getWednesdayFourthRoom());
+        FourthWednesdayTitle.setText(checkForOrientation(schedule.getWednesday().getPeriodFour()
+                .getCourseTitle()));
+        FourthWednesdayRoom.setText(schedule.getWednesday().getPeriodFour().getClassRoom());
 
 
         //Thursday's schedule
 
-        FirstThursdayTitle.setText(checkForOrientation(schedule.getThursdayFirstTitle()));
-        FirstThursdayRoom.setText(schedule.getThursdayFirstRoom());
+        FirstThursdayTitle.setText(checkForOrientation(schedule.getThursday().getPeriodOne()
+                .getCourseTitle()));
+        FirstThursdayRoom.setText(schedule.getThursday().getPeriodOne().getClassRoom());
 
-        SecondThursdayTitle.setText(checkForOrientation(schedule.getThursdaySecondTitle()));
-        SecondThursdayRoom.setText(schedule.getThursdaySecondRoom());
+        SecondThursdayTitle.setText(checkForOrientation(schedule.getThursday().getPeriodTwo()
+                .getCourseTitle()));
+        SecondThursdayRoom.setText(schedule.getThursday().getPeriodTwo().getClassRoom());
 
-        ThirdThursdayTitle.setText(checkForOrientation(schedule.getThursdayThirdTitle()));
-        ThirdThursdayRoom.setText(schedule.getThursdayThirdRoom());
+        ThirdThursdayTitle.setText(checkForOrientation(schedule.getThursday().getPeriodThree()
+                .getCourseTitle()));
+        ThirdThursdayRoom.setText(schedule.getThursday().getPeriodThree().getClassRoom());
 
-        FourthThursdayTitle.setText(checkForOrientation(schedule.getThursdayFourthTitle()));
-        FourthThursdayRoom.setText(schedule.getThursdayFourthRoom());
+        FourthThursdayTitle.setText(checkForOrientation(schedule.getThursday().getPeriodFour()
+                .getCourseTitle()));
+        FourthThursdayRoom.setText(schedule.getThursday().getPeriodFour().getClassRoom());
 
 
         //Friday's schedule
 
-        FirstFridayTitle.setText(checkForOrientation(schedule.getFridayFirstTitle()));
-        FirstFridayRoom.setText(schedule.getFridayFirstRoom());
+        FirstFridayTitle.setText(checkForOrientation(schedule.getFriday().getPeriodOne()
+                .getCourseTitle()));
+        FirstFridayRoom.setText(schedule.getFriday().getPeriodOne().getClassRoom());
 
-        SecondFridayTitle.setText(checkForOrientation(schedule.getFridaySecondTitle()));
-        SecondFridayRoom.setText(schedule.getFridaySecondRoom());
+        SecondFridayTitle.setText(checkForOrientation(schedule.getFriday().getPeriodTwo()
+                .getCourseTitle()));
+        SecondFridayRoom.setText(schedule.getFriday().getPeriodTwo().getClassRoom());
 
-        ThirdFridayTitle.setText(checkForOrientation(schedule.getFridayThirdTitle()));
-        ThirdFridayRoom.setText(schedule.getFridayThirdRoom());
+        ThirdFridayTitle.setText(checkForOrientation(schedule.getFriday().getPeriodThree()
+                .getCourseTitle()));
+        ThirdFridayRoom.setText(schedule.getFriday().getPeriodThree().getClassRoom());
 
-        FourthFridayTitle.setText(checkForOrientation(schedule.getFridayFourthTitle()));
-        FourthFridayRoom.setText(schedule.getFridayFourthRoom());
+        FourthFridayTitle.setText(checkForOrientation(schedule.getFriday().getPeriodFour()
+                .getCourseTitle()));
+        FourthFridayRoom.setText(schedule.getFriday().getPeriodFour().getClassRoom());
 
 
         //Saturday's schedule
 
-        FirstSaturdayTitle.setText(checkForOrientation(schedule.getSaturdayFirstTitle()));
-        FirstSaturdayRoom.setText(schedule.getSaturdayFirstRoom());
+        FirstSaturdayTitle.setText(checkForOrientation(schedule.getSaturday().getPeriodOne()
+                .getCourseTitle()));
+        FirstSaturdayRoom.setText(schedule.getSaturday().getPeriodOne().getClassRoom());
 
-        SecondSaturdayTitle.setText(checkForOrientation(schedule.getSaturdaySecondTitle()));
-        SecondSaturdayRoom.setText(schedule.getSaturdaySecondRoom());
+        SecondSaturdayTitle.setText(checkForOrientation(schedule.getSaturday().getPeriodTwo()
+                .getCourseTitle()));
+        SecondSaturdayRoom.setText(schedule.getSaturday().getPeriodTwo().getClassRoom());
 
-        ThirdSaturdayTitle.setText(checkForOrientation(schedule.getSaturdayThirdTitle()));
-        ThirdSaturdayRoom.setText(schedule.getSaturdayThirdRoom());
+        ThirdSaturdayTitle.setText(checkForOrientation(schedule.getSaturday().getPeriodThree()
+                .getCourseTitle()));
+        ThirdSaturdayRoom.setText(schedule.getSaturday().getPeriodThree().getClassRoom());
 
-        FourthSaturdayTitle.setText(checkForOrientation(schedule.getSaturdayFourthTitle()));
-        FourthSaturdayRoom.setText(schedule.getSaturdayFourthRoom());
+        FourthSaturdayTitle.setText(checkForOrientation(schedule.getSaturday().getPeriodFour()
+                .getCourseTitle()));
+        FourthSaturdayRoom.setText(schedule.getSaturday().getPeriodFour().getClassRoom());
 
         changeVisibility(1);
     }
@@ -421,7 +442,7 @@ public class MainFragment extends Fragment {
             return text;
         }
     }
-    private void changeVisibility(int visibility){
+    private void changeVisibility(int visibility)   {
         if (visibility == 1) {
             loadingLayout.setVisibility(LinearLayout.GONE);
             nestedScrollView.setVisibility(NestedScrollView.VISIBLE);
