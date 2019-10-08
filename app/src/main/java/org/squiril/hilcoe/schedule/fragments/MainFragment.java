@@ -426,7 +426,7 @@ public class MainFragment extends Fragment {
     private boolean checkIfUpdated(){
         FileInputStream fis;
         try {
-            fis = Objects.requireNonNull(getActivity()).openFileInput(prefs.getString("bid", ""));
+            fis = Objects.requireNonNull(getActivity()).openFileInput(prefs.getString("bid", "") + ".json");
         } catch (FileNotFoundException e){
             fis = null;
         }
