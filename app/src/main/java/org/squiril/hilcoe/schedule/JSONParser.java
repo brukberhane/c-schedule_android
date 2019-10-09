@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import static org.squiril.hilcoe.schedule.Constants.PREF_NAME;
 
 public class JSONParser {
+    //TODO: For god's sake there has to be a better way to parse the JSON
     private static String TAG = "JSONParser";
     private static String firstClass = "firstClass";
     private static String secondClass = "secondClass";
