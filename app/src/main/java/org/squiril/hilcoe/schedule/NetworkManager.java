@@ -19,7 +19,7 @@ import java.util.Objects;
 import static org.squiril.hilcoe.schedule.Constants.PREF_NAME;
 
 public class NetworkManager {
-
+    //TODO: Add a method to retrieve the courses taken for a specific batch
     private static String TAG = "NetworkManager";
     private Context context;
     private SharedPreferences prefs;

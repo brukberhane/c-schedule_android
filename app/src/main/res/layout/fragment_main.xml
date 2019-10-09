@@ -30,7 +30,9 @@
         android:layout_width="match_parent"
         android:id="@+id/fragment_main_loaded_view"
         android:layout_height="wrap_content">
-
+        <!--
+            TODO: A better view than TableLayout, Perhaps: a grid view?(Can open up possibilities for further functionality.
+        -->
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
