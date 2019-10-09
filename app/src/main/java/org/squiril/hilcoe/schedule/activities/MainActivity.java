@@ -1,6 +1,7 @@
 package org.squiril.hilcoe.schedule.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import org.squiril.hilcoe.schedule.R;
+import org.squiril.hilcoe.schedule.Schedule;
 import org.squiril.hilcoe.schedule.fragments.LoginFragment;
 import org.squiril.hilcoe.schedule.fragments.MainFragment;
 
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
-        FragmentManager fm = getSupportFragmentManager();
+        /*FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if (fragment == null){
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
                         .add(R.id.fragment_container, fragment)
                         .commit();
             }
-        }
+        }*/
+        Intent i = new Intent(MainActivity.this, Schedule.class);
+        startActivity(i);
     }
 }
